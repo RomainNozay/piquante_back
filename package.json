@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/RomainNozay/piquante_back/issues"
   },
-  "homepage": "https://github.com/RomainNozay/piquante_back#readme"
+  "homepage": "https://github.com/RomainNozay/piquante_back#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
