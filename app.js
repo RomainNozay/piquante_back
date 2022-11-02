@@ -7,27 +7,35 @@ const morgan = require("morgan");
 //importation connexion base de donnée mongoDB;
 const mongoose = require("./db/db");
 
+//importation de body-parser
+const bodyParser = require("body-parser");
+
 //pour créer une application express
 const app = express();
 
 //logger les requête (req) et réponse res
 app.use(morgan("dev"));
 
+//Transformer le corps (le body) en json objet javascript utilisable
+app.use(bodyParser.json());
+
+//gérer les problèmes de CORS (Cross Origin Request Sharing)
+app.use((req,res, next) =>{
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-control-allow-Header",
+        "Origin, X-Requested-with, Content, Accept, Content-type, Authorization"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    )
+    next();
+});
+
+
 //app.use () route générale et la fonction
-app.use((req,res, next) => {
-    console.log("première requête 1");
-    next();
-});
 
-//statut de la réponse
-app.use((req,res, next) => {
-    res.status(200);
-    next();
-});
-
-app.use((req,res) => {
-    res.json({message : "ça fonctionne"})
-});
 
 //exportation de app.js pour pouvoir y accéder d'un autre fichier
 module.exports = app;
