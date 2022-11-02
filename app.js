@@ -4,6 +4,9 @@ const express = require ("express");
 //importation de morgan (logger http)
 const morgan = require("morgan");
 
+//importation connexion base de donnée mongoDB;
+const mongoose = require("./db/db");
+
 //pour créer une application express
 const app = express();
 
