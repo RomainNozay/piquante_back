@@ -42,3 +42,22 @@ exports.signup = (req, res, next) => {
 
 };
 
+//loggin pour s'identifier
+exports.login = (req, res,next) => {
+
+//chiffrez email de la requête
+const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
+
+//Chercher dans la la base de donnée si le mail est enregistré
+modelUser.findOne({email:emailCryptoJs})
+//Si le mail n'existe pas
+.then((modelUser) => {
+if(!modelUser){
+    return res.status(400).json({error : "Utilisateur inexistant"})
+}
+res.status(200).json({message: "l'utilisateur à été trouvé"})
+
+})
+.catch((error) => res.status(500).json({error}));
+};
+
