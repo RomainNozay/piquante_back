@@ -55,7 +55,19 @@ modelUser.findOne({email:emailCryptoJs})
 if(!modelUser){
     return res.status(400).json({error : "Utilisateur inexistant"})
 }
-res.status(200).json({message: "l'utilisateur à été trouvé"})
+//Contrôler la validité du password
+bcrypt.compare(req.body.password, modelUser.password)
+.then((controlPassword) => {
+    console.log(controlPassword);
+
+    //si mot de passe incorrect
+    if(!controlPassword){
+        return res.status(401).json({error : "le mot de passe est incorrect"})
+    }
+
+    //mot de passe correct
+    res.status(200).json({message : "mot de passe corret"})
+})
 
 })
 .catch((error) => res.status(500).json({error}));
