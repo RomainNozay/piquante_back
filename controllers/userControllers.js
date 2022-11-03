@@ -35,11 +35,6 @@ exports.signup = (req, res, next) => {
         })
         .catch((error) => res.status(500).json({error}).send(console.log(error)));
 
-
-
-    //console.log(user);
-
-
 };
 
 //loggin pour s'identifier
