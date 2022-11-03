@@ -29,11 +29,11 @@ exports.signup = (req, res, next) => {
             //envoyer le user dans la base de donnée MongoDB
             user
                 .save()
-                .then(() => res.status(201).send({ message: "utilisateur créé et sauvegardé" }))
-                .catch(() => res.status(500).send({ error }.send))
+                .then(() => res.status(201).json({ message: "utilisateur créé et sauvegardé" }))
+                .catch((error) => res.status(400).json({ error }).send());
 
         })
-        .catch((error) => res.status(500).send({ error }).send(console.log(error)));
+        .catch((error) => res.status(500).json({error}).send(console.log(error)));
 
 
 
