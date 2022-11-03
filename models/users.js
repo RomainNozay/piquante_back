@@ -1,9 +1,9 @@
 //importer mongoose
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 // le modèle de base de donnée pour le signup 
 const usersSchema = mongoose.Schema({
-    email: { type: String, required: true, unique: true};
+    email: { type: String, required: true, unique: true},
     password: { type: String, required: true}
 });
 

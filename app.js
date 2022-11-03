@@ -10,6 +10,9 @@ const mongoose = require("./db/db");
 //importation de body-parser
 const bodyParser = require("body-parser");
 
+//importation des routes
+const userRoads = require("./routes/user");
+
 //pour créer une application express
 const app = express();
 
@@ -34,7 +37,8 @@ app.use((req,res, next) =>{
 });
 
 
-//app.use () route générale et la fonction
+//la route d'authentification 
+app.use('/api/auth', userRoads);
 
 
 //exportation de app.js pour pouvoir y accéder d'un autre fichier
