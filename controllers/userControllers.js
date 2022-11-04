@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt")
 const cryptojs = require("crypto-js");
 
 //importation variable environnement
-const dotenv = require ("dotenv");
+const dotenv = require("dotenv");
 const result = dotenv.config();
 
 //signup pour enregistrer nouvel utilisateur
@@ -33,38 +33,39 @@ exports.signup = (req, res, next) => {
                 .catch((error) => res.status(400).json({ error }).send());
 
         })
-        .catch((error) => res.status(500).json({error}).send(console.log(error)));
+        .catch((error) => res.status(500).json({ error }).send(console.log(error)));
 
 };
 
 //loggin pour s'identifier
-exports.login = (req, res,next) => {
+exports.login = (req, res, next) => {
 
-//chiffrez email de la requête
-const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
+    //chiffrez email de la requête
+    const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
 
-//Chercher dans la la base de donnée si le mail est enregistré
-modelUser.findOne({email:emailCryptoJs})
-//Si le mail n'existe pas
-.then((modelUser) => {
-if(!modelUser){
-    return res.status(400).json({error : "Utilisateur inexistant"})
-}
-//Contrôler la validité du password
-bcrypt.compare(req.body.password, modelUser.password)
-.then((controlPassword) => {
-    console.log(controlPassword);
+    //Chercher dans la la base de donnée si le mail est enregistré
+    modelUser.findOne({ email: emailCryptoJs })
+        //Si le mail n'existe pas
+        .then((modelUser) => {
+            if (!modelUser) {
+                return res.status(400).json({ error: "Utilisateur inexistant" })
+            }
+            //Contrôler la validité du password
+            bcrypt.compare(req.body.password, modelUser.password)
+                .then((controlPassword) => {
+                    console.log(controlPassword);
 
-    //si mot de passe incorrect
-    if(!controlPassword){
-        return res.status(401).json({error : "le mot de passe est incorrect"})
-    }
+                    //si mot de passe incorrect
+                    if (!controlPassword) {
+                        return res.status(401).json({ error: "le mot de passe est incorrect" })
+                    }
 
-    //mot de passe correct
-    res.status(200).json({message : "mot de passe corret"})
-})
+                    //mot de passe correct
+                    res.status(200).json({ message: "mot de passe corret" })
+                })
+                .catch((error) => res.status(501).json({ error }));
 
-})
-.catch((error) => res.status(500).json({error}));
+        })
+        .catch((error) => res.status(500).json({ error }));
 };
 
