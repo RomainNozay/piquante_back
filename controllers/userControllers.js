@@ -1,71 +1,48 @@
-//importation models de la base de donnée users.js
-const modelUser = require("../models/users");
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+const cryptojs = require("crypto-js")
 
-//importation de bcrypt pour mot de passe
-const bcrypt = require("bcrypt")
+const User = require('../models/users')
 
-//importation de crypto-js pour crypter le mail
-const cryptojs = require("crypto-js");
-
-//importation variable environnement
-const dotenv = require("dotenv");
-const result = dotenv.config();
-
-//signup pour enregistrer nouvel utilisateur
+// Créer un compte utilisateur
 exports.signup = (req, res, next) => {
-
-    //Chiffrer l'email avant de l'envoyer sur mongoDB
     const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
-
-    //hasher le mot de passe avant de l'envoyer dans la base de donnée
-    bcrypt.hash(req.body.password, 10) //salt combien de fois hashons nous le mot de passe
-        .then((hashPassword) => {
-
-            const user = new modelUser({
+    bcrypt.hash(req.body.password, 10)
+        .then(hash => {
+            const user = new User({
                 email: emailCryptoJs,
-                password: hashPassword
-            });
-
-            //envoyer le user dans la base de donnée MongoDB
-            user
-                .save()
-                .then(() => res.status(201).json({ message: "utilisateur créé et sauvegardé" }))
-                .catch((error) => res.status(400).json({ error }).send());
-
+                password: hash
+            })
+            user.save()
+                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                .catch(error => res.status(400).json({ error }))
         })
-        .catch((error) => res.status(500).json({ error }).send(console.log(error)));
+        .catch(error => res.status(500).json({ error }))
+}
 
-};
-
-//loggin pour s'identifier
+// Se connecter à un compte utilisateur
 exports.login = (req, res, next) => {
-
-    //chiffrez email de la requête
     const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
-
-    //Chercher dans la la base de donnée si le mail est enregistré
-    modelUser.findOne({ email: emailCryptoJs })
-        //Si le mail n'existe pas
-        .then((modelUser) => {
-            if (!modelUser) {
-                return res.status(400).json({ error: "Utilisateur inexistant" })
+    User.findOne({ email: emailCryptoJs })
+        .then(user => {
+            if (!user) {
+                return res.status(401).json({ error: 'Utilisateur non trouvé !' })
             }
-            //Contrôler la validité du password
-            bcrypt.compare(req.body.password, modelUser.password)
-                .then((controlPassword) => {
-                    console.log(controlPassword);
-
-                    //si mot de passe incorrect
-                    if (!controlPassword) {
-                        return res.status(401).json({ error: "le mot de passe est incorrect" })
+            bcrypt.compare(req.body.password, user.password)
+                .then(valid => {
+                    if (!valid) {
+                        return res.status(401).json({ error: 'Mot de passe incorrect !' })
                     }
-
-                    //mot de passe correct
-                    res.status(200).json({ message: "mot de passe corret" })
+                    res.status(200).json({
+                        userId: user._id,
+                        token: jwt.sign(
+                            { userId: user._id },
+                            `${process.env.RND_TKN}`,
+                            { expiresIn: '24h' }
+                        )
+                    })
                 })
-                .catch((error) => res.status(501).json({ error }));
-
+                .catch(error => res.status(500).json({ error }))
         })
-        .catch((error) => res.status(500).json({ error }));
-};
-
+        .catch(error => res.status(500).json({ error }))
+}
