@@ -7,11 +7,15 @@ const morgan = require("morgan");
 //importation connexion base de donnée mongoDB;
 const mongoose = require("./db/db");
 
+//Gestion des images
+const path = require('path');
+
 //importation de body-parser
 const bodyParser = require("body-parser");
 
 //importation des routes
-const userRoads = require("./routes/user");
+const userRoads = require("./routes/userRoads");
+const saucesRoads = require("./routes/saucesRoads")
 
 //pour créer une application express
 const app = express();
@@ -30,10 +34,13 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //la route d'authentification 
 app.use('/api/auth', userRoads);
 
+//la route de la sauce
+app.use("/api/sauces", saucesRoads);
 
 //exportation de app.js pour pouvoir y accéder d'un autre fichier
 module.exports = app;
