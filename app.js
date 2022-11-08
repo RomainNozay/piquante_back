@@ -34,6 +34,7 @@ app.use((req, res, next) => {
     next()
 })
 
+//Route pour les images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //la route d'authentification 
