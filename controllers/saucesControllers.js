@@ -1,6 +1,6 @@
 //importation du model sauces
 const sauces = require("../models/saucesModel");
-
+const fs = require("fs");
 
 // Logiques métiers pour les sauces
 
@@ -52,10 +52,20 @@ exports.createSauce = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
   };
 
-  //Supprimer une sauce
-  exports.deleteSauce = (req, res, next) => {
-    sauces
-    .deleteOne({_id: req.params.id})
-    .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
-    .catch(error => res.status(400).json({ error }))
-  }
+ // Suppression d'une sauce (Delete)
+exports.deleteSauce = (req, res, next) => {
+  sauces
+  .findOne({_id: req.params.id})
+    .then(sauce => {
+      // Récupération du nom du fichier
+      const filename = sauce.imageUrl.split('/images/')[1];
+      // On efface le fichier (unlink)
+      fs.unlink(`images/${filename}`, () => {
+        sauces
+        .deleteOne({ _id: req.params.id })
+        .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+        .catch(error => res.status(400).json({ error }));
+      });
+    })
+    .catch(error => res.status(500).json({ error }));
+};
