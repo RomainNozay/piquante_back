@@ -79,13 +79,19 @@ exports.deleteSauce = (req, res, next) => {
     .then(sauce => {
       // Récupération du nom du fichier
       const filename = sauce.imageUrl.split('/images/')[1];
-      // On efface le fichier (unlink)
-      fs.unlink(`images/${filename}`, () => {
-        sauces
-        .deleteOne({ _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
-        .catch(error => res.status(400).json({ error }));
-      });
+      //sécurité supplementaire pour contrôler les userId de la sauce et de l'url
+      userIdUrl = req.originalUrl.split("=")[1];
+      if(sauce.userId === userIdUrl){
+        // On efface le fichier (unlink)
+        fs.unlink(`images/${filename}`, () => {
+          sauces
+          .deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .catch(error => res.status(400).json({ error }));
+});
+      }else{
+        throw  "userId différent de userId objet à supprimer"
+      }
     })
     .catch(error => res.status(500).json({ error }));
-};
+}
