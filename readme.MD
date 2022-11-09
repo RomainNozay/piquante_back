@@ -23,5 +23,8 @@ http://localhost:3000/api/sauces:id
 6)Route (PUT) pour modifier une sauce selectionnée par son identifiant
 http://localhost:3000/api/sauces:id
 
-6)Route (DElETE) pour supprimer une sauce selectionnée par son identifiant
+6)Route (DELETE) pour supprimer une sauce selectionnée par son identifiant
 http://localhost:3000/api/sauces:id
+
+7)Route (POST) pour ajouter des like ou des dislike
+http://localhost:3000/api/sauces:id/like
