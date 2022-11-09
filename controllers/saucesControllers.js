@@ -1,5 +1,6 @@
 //importation du model sauces
 const sauces = require("../models/saucesModel");
+//module pour accéder aux fichier du serveur
 const fs = require("fs");
 
 // Logiques métiers pour les sauces
@@ -39,13 +40,32 @@ exports.createSauce = (req, res, next) => {
 
  //Modifié une sauce
  exports.modifyOneSauce = (req, res, next) => {
+
+    if(req.file){
+      sauces
+      .findOne({_id: req.params.id})
+      .then((saucesModel) => {
+        //récupération du nom de la photo à supprimer dans la base de donnée
+        const filename = saucesModel.imageUrl.split("/images")[1];
+        console.log(filename);
+        //suppression de cette image
+        fs.unlink(`images/${filename}`, (error) => {
+          if(error) throw error;
+        })
+      })
+        .catch(error => res.status(400).json({ error }));
+    }else{
+console.log("false")
+    }
+
     const sauceObject = req.file ?
       // Si il existe déjà une image
       {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-      } : { ...req.body }; 
+      } 
       // Si il n'existe pas d'image
+      : { ...req.body }; 
       sauces
         .updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
         .then(() => res.status(200).json({ message: 'Objet modifié !'}))
