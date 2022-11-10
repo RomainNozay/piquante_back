@@ -1,6 +1,6 @@
 //importation de express
 const express = require("express");
-
+const helmet = require("helmet")
 //importation de morgan (logger http)
 const morgan = require("morgan");
 
@@ -34,6 +34,7 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use(helmet());
 //Route pour les images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 

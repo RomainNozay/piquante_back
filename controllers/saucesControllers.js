@@ -18,6 +18,12 @@ exports.createSauce = (req, res, next) => {
     !regex.test(sauceObject.description) ||
     !regex.test(sauceObject.mainPepper)
   ) {
+    const filename = req.file.filename;
+    console.log(filename);
+    //suppression de cette image
+    fs.unlink(`images/${filename}`, (error) => {
+      if (error) throw error;
+    })
     return res
       .status(500)
       .json({ error: "Des champs contiennent des caractères invalides" });
