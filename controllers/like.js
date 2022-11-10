@@ -23,7 +23,7 @@ exports.giveLike = (req, res, next) => {
                         .then(() => res.status(200).json({ message: 'Like ajouté !' }))
                         .catch(error => res.status(400).json({ error }))
                 }
-            
+
             }
             else if (req.body.like === -1) {
                 if (sauce.usersDisliked.includes(req.body.userId)) {

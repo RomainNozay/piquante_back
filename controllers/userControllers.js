@@ -6,23 +6,23 @@ const User = require('../models/usersModel')
 const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 // Créer un compte utilisateur
 exports.signup = (req, res, next) => {
-    if(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(User.email)){
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(User.email)) {
         return res
-        .status(500)
-        .json({ error: "Des champs contiennent des caractères invalides" });
-    }else{
-    const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
-    bcrypt.hash(req.body.password, 10)
-        .then((hashPassword) => {
-            const user = new User({
-                email: emailCryptoJs,
-                password: hashPassword
+            .status(500)
+            .json({ error: "Des champs contiennent des caractères invalides" });
+    } else {
+        const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
+        bcrypt.hash(req.body.password, 10)
+            .then((hashPassword) => {
+                const user = new User({
+                    email: emailCryptoJs,
+                    password: hashPassword
+                })
+                user.save()
+                    .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
+                    .catch(error => res.status(400).json({ error }))
             })
-            user.save()
-                .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-                .catch(error => res.status(400).json({ error }))
-        })
-        .catch(error => res.status(500).json({ error }))
+            .catch(error => res.status(500).json({ error }))
     }
 }
 
