@@ -34,7 +34,7 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use(helmet());
+
 //Route pour les images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
@@ -44,5 +44,6 @@ app.use('/api/auth', userRoads);
 //la route de la sauce
 app.use("/api/sauces", saucesRoads);
 
+app.use(helmet());
 //exportation de app.js pour pouvoir y accéder d'un autre fichier
 module.exports = app;
