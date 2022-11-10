@@ -3,12 +3,25 @@ const sauces = require("../models/saucesModel");
 //module pour accéder aux fichier du serveur
 const fs = require("fs");
 
+//regex pour contrôler les champs de création d'une sauce
+const regex = /^[^@&"()!_$*€£`+=\/;?#&<>]+$/;
 // Logiques métiers pour les sauces
 
 // Création d'une nouvelle sauce (Post)
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
+  //contrôle des champs avec la regex pour eviter les injections
+  if (
+    !regex.test(sauceObject.name) ||
+    !regex.test(sauceObject.manufacturer) ||
+    !regex.test(sauceObject.description) ||
+    !regex.test(sauceObject.mainPepper)
+  ) {
+    return res
+      .status(500)
+      .json({ error: "Des champs contiennent des caractères invalides" });
+  }else{
   // Création d'un nouvel objet Sauce
   const sauce = new sauces({
     ...sauceObject,
@@ -20,6 +33,7 @@ exports.createSauce = (req, res, next) => {
     .save()
     .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
     .catch(error => res.status(400).json({ error }));
+}
 };
 
 // Lecture de toutes les sauces dans la base de données (Get)
@@ -66,6 +80,16 @@ exports.modifyOneSauce = (req, res, next) => {
     }
     // Si il n'existe pas d'image
     : { ...req.body };
+    if (
+      !regex.test(sauceObject.name) ||
+      !regex.test(sauceObject.manufacturer) ||
+      !regex.test(sauceObject.description) ||
+      !regex.test(sauceObject.mainPepper)
+    ) {
+      return res
+        .status(500)
+        .json({ error: "Des champs contiennent des caractères invalides" }); // Checking from form input values format before dealing with them
+    }
   sauces
     .updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
     .then(() => res.status(200).json({ message: 'Objet modifié !' }))
