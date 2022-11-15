@@ -23,7 +23,7 @@ exports.createSauce = (req, res, next) => {
       .json({ error: "Des champs contiennent des caractères invalides" });
   } else {
     const sauce = new sauces({
-      ...sauceObject, 
+      ...sauceObject,
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     sauce

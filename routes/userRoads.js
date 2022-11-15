@@ -6,9 +6,9 @@ const userControllers = require("../controllers/userControllers");
 const password = require("../middleware/password");
 const raterLimit = require("express-rate-limit")
 
-const limiter = raterLimit ({
-    windowMs : 5 * 60 * 1000,
-    max : 5,
+const limiter = raterLimit({
+    windowMs: 5 * 60 * 1000,
+    max: 5,
 })
 
 
