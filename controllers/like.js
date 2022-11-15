@@ -1,4 +1,3 @@
-//importation du model sauces
 const sauces = require("../models/saucesModel");
 
 exports.giveLike = (req, res, next) => {
@@ -6,13 +5,6 @@ exports.giveLike = (req, res, next) => {
         .findOne({ _id: req.params.id })
         .then((sauce) => {
 
-            //utilisation de la méthode javascript includes()
-            //utilisation opérateur $inc (mongoDB)
-            //utilisation opérateur $push (mongoDB)
-            //utilisation opérateur $pull (mongoDB)
-
-            //Si je veux aimer
-            //Si Identifiant utilisateur non présent dans le tableau de la sauce et strictement 1 dans la requête
             if (req.body.like === 1) {
                 if (sauce.usersLiked.includes(req.body.userId)) {
                     res.status(401).json({ error: 'Sauce déja liké' });

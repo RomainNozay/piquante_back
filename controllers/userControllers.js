@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const cryptojs = require("crypto-js")
-
 const User = require('../models/usersModel')
+
 const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-// Créer un compte utilisateur
+
 exports.signup = (req, res, next) => {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(User.email)) {
+    if (regex.test(User.email)) {
         return res
             .status(500)
             .json({ error: "Des champs contiennent des caractères invalides" });
@@ -26,7 +26,6 @@ exports.signup = (req, res, next) => {
     }
 }
 
-// Se connecter à un compte utilisateur
 exports.login = (req, res, next) => {
     const emailCryptoJs = cryptojs.HmacSHA256(req.body.email, `${process.env.CRYPTOJS_EMAIL}`).toString();
     User.findOne({ email: emailCryptoJs })

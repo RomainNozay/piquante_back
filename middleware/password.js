@@ -1,10 +1,7 @@
-//importation de password validator
 const passwordValidator = require("password-validator");
 
-//Création du schéma pour le mail
 const passwordSchema = new passwordValidator();
 
-//le schema que doit respecter le mot de passe
 passwordSchema
     .is().min(5)
     .is().max(20)
@@ -14,10 +11,6 @@ passwordSchema
     .is().not().spaces()
     .is().not().oneOf(['Passw0rd', 'Password123']);
 
-//vérification 
-
-
-//exportation
 module.exports = (req, res, next) => {
     if (passwordSchema.validate(req.body.password)) {
         next()
