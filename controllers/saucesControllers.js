@@ -3,7 +3,6 @@ const fs = require("fs");
 
 const regex = /^[^@&"()!_$*€£`+=\/;?#&<>]+$/;
 
-
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
   delete sauceObject._id;
@@ -78,7 +77,7 @@ exports.modifyOneSauce = (req, res, next) => {
   ) {
     return res
       .status(500)
-      .json({ error: "Des champs contiennent des caractères invalides" }); // Checking from form input values format before dealing with them
+      .json({ error: "Des champs contiennent des caractères invalides" });
   }
   sauces
     .updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
