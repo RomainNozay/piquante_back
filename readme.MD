@@ -1,30 +1,34 @@
 I) Serveur
-Mettre  les informations pour les variables d'environnement (base de donnée MongoDB Atlas)
 
-Pour lancer le server : `nodemon server`
+Bonjour,
+
+Renseigner vos variables d'environnement dans un fichier .env en partant du modèle fournit
+dans env.example.
+
+Puis lancer le server grâce à `nodemon server` ou node server
 
 II)Routes
 
-1)Route (POST) pour créer un compte :
+1) Route (POST) pour créer un compte :
 http://localhost:3000/api/auth/signup
 
-2)Route (POST) pour se connecter :
+2) Route (POST) pour se connecter :
 http://localhost:3000/api/auth/login
 
-3)Route (POST) pour créer une sauce :
+3) Route (POST) pour créer une sauce :
 http://localhost:3000/api/sauces
 
-4)Route (GET) pour récupérer toutes les sauces :
+4) Route (GET) pour récupérer toutes les sauces :
 http://localhost:3000/api/sauces
 
-5)Route (GET) pour récupérer une sauce grâce à son identifiant :
+5) Route (GET) pour récupérer une sauce grâce à son identifiant :
 http://localhost:3000/api/sauces:id
 
-6)Route (PUT) pour modifier une sauce selectionnée par son identifiant :
+6 )Route (PUT) pour modifier une sauce selectionnée par son identifiant :
 http://localhost:3000/api/sauces:id
 
-6)Route (DELETE) pour supprimer une sauce selectionnée par son identifiant :
+7) Route (DELETE) pour supprimer une sauce selectionnée par son identifiant :
 http://localhost:3000/api/sauces:id
 
-7)Route (POST) pour ajouter des like ou des dislike :
+8) Route (POST) pour ajouter des like ou des dislike :
 http://localhost:3000/api/sauces:id/like
