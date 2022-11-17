@@ -1,11 +1,10 @@
 I) Serveur
-
 Bonjour,
 
 Renseigner vos variables d'environnement dans un fichier .env en partant du modèle fournit
 dans env.example.
 
-Puis lancer le server grâce à `nodemon server` ou node server
+Puis lancer le server grâce à `nodemon server` ou 'node server'
 
 II)Routes
 
