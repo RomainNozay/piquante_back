@@ -3,8 +3,8 @@ const fs = require("fs");
 
 const regex = /^[^@&"()!_$*€£`+=\/;?#&<>]+$/;
 
-exports.createSauce = (req, res, next) => {
-  const sauceObject = JSON.parse(req.body.sauce);
+exports.createSauce = (request, response, next) => {
+  const sauceObject = JSON.parse(request.body.sauce);
   delete sauceObject._id;
   if (
     !regex.test(sauceObject.name) ||
@@ -12,48 +12,46 @@ exports.createSauce = (req, res, next) => {
     !regex.test(sauceObject.description) ||
     !regex.test(sauceObject.mainPepper)
   ) {
-    const filename = req.file.filename;
+    const filename = request.file.filename;
     console.log(filename);
     fs.unlink(`images/${filename}`, (error) => {
       if (error) throw error;
     })
-    return res
+    return response
       .status(500)
       .json({ error: "Des champs contiennent des caractères invalides" });
   } else {
     const sauce = new sauces({
       ...sauceObject,
       imageUrl: 
-      `${req.protocol}://
-      ${req.get('host')}
-      /images/${req.file.filename}`
+      `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     });
     sauce
       .save()
-      .then(() => res.status(201).json({ message: 'Objet enregistré !' }))
-      .catch(error => res.status(400).json({ error }));
+      .then(() => response.status(201).json({ message: 'Objet enregistré !' }))
+      .catch(error => response.status(400).json({ error }));
   }
 };
 
-exports.getSauces = (req, res, next) => {
+exports.getSauces = (request, response, next) => {
   sauces
     .find()
-    .then(sauces => res.status(200).json(sauces))
-    .catch(error => res.status(400).json({ error }));
+    .then(sauces => response.status(200).json(sauces))
+    .catch(error => response.status(400).json({ error }));
 };
 
-exports.getOneSauce = (req, res, next) => {
+exports.getOneSauce = (request, response, next) => {
   sauces
-    .findOne({ _id: req.params.id })
-    .then(sauce => res.status(200).json(sauce))
-    .catch(error => res.status(404).json({ error }));
+    .findOne({ _id: request.params.id })
+    .then(sauce => response.status(200).json(sauce))
+    .catch(error => response.status(404).json({ error }));
 };
 
-exports.modifyOneSauce = (req, res, next) => {
+exports.modifyOneSauce = (request, response, next) => {
 
-  if (req.file) {
+  if (request.file) {
     sauces
-      .findOne({ _id: req.params.id })
+      .findOne({ _id: request.params.id })
       .then((saucesModel) => {
         const filename = saucesModel.imageUrl.split("/images")[1];
         console.log(filename);
@@ -61,45 +59,45 @@ exports.modifyOneSauce = (req, res, next) => {
           if (error) throw error;
         })
       })
-      .catch(error => res.status(400).json({ error }));
+      .catch(error => response.status(400).json({ error }));
   } else {
     console.log("false")
   }
 
-  const sauceObject = req.file ?
+  const sauceObject = request.file ?
     {
-      ...JSON.parse(req.body.sauce),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      ...JSON.parse(request.body.sauce),
+      imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     }
-    : { ...req.body };
+    : { ...request.body };
   if (
     !regex.test(sauceObject.name) ||
     !regex.test(sauceObject.manufacturer) ||
     !regex.test(sauceObject.description) ||
     !regex.test(sauceObject.mainPepper)
   ) {
-    return res
+    return response
       .status(500)
       .json({ error: "Des champs contiennent des caractères invalides" });
   }
   sauces
-    .updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Objet modifié !' }))
-    .catch(error => res.status(400).json({ error }));
+    .updateOne({ _id: request.params.id }, { ...sauceObject, _id: request.params.id })
+    .then(() => response.status(200).json({ message: 'Objet modifié !' }))
+    .catch(error => response.status(400).json({ error }));
 };
 
-exports.deleteSauce = (req, res, next) => {
+exports.deleteSauce = (request, response, next) => {
   sauces
-    .findOne({ _id: req.params.id })
+    .findOne({ _id: request.params.id })
     .then(sauce => {
       const filename = sauce.imageUrl.split('/images/')[1];
       // userIdUrl = req.originalUrl.split("=")[1];
       fs.unlink(`images/${filename}`, () => {
         sauces
-          .deleteOne({ _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Objet supprimé !' }))
-          .catch(error => res.status(400).json({ error }));
+          .deleteOne({ _id: request.params.id })
+          .then(() => response.status(200).json({ message: 'Objet supprimé !' }))
+          .catch(error => response.status(400).json({ error }));
       });
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => response.status(500).json({ error }));
 }

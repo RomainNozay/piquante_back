@@ -1,54 +1,54 @@
 const sauces = require("../models/saucesModel");
 
-exports.giveLike = (req, res, next) => {
+exports.giveLike = (request, response, next) => {
     sauces
-        .findOne({ _id: req.params.id })
+        .findOne({ _id: request.params.id })
         .then((sauce) => {
 
-            if (req.body.like === 1) {
-                if (sauce.usersLiked.includes(req.body.userId)) {
-                    res.status(401).json({ error: 'Sauce déja liké' });
+            if (request.body.like === 1) {
+                if (sauce.usersLiked.includes(request.body.userId)) {
+                    response.status(401).json({ error: 'Sauce déja liké' });
                 }
                 else {
                     sauces
-                        .updateOne({ _id: req.params.id }, 
+                        .updateOne({ _id: request.params.id }, 
                             { $inc: { likes: 1 }, 
-                            $push: { usersLiked: req.body.userId } })
-                        .then(() => res.status(200).json({ message: 'Like ajouté !' }))
-                        .catch(error => res.status(400).json({ error }))
+                            $push: { usersLiked: request.body.userId } })
+                        .then(() => response.status(200).json({ message: 'Like ajouté !' }))
+                        .catch(error => response.status(400).json({ error }))
                 }
 
             }
-            else if (req.body.like === -1) {
-                if (sauce.usersDisliked.includes(req.body.userId)) {
-                    res.status(401).json({ error: 'Sauce déja disliké' });
+            else if (request.body.like === -1) {
+                if (sauce.usersDisliked.includes(request.body.userId)) {
+                    response.status(401).json({ error: 'Sauce déja disliké' });
                 }
                 else {
                     sauces
-                        .updateOne({ _id: req.params.id }, 
-                            { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId } })
-                        .then(() => res.status(200).json({ message: 'Dislike ajouté !' }))
-                        .catch(error => res.status(400).json({ error }));
+                        .updateOne({ _id: request.params.id }, 
+                            { $inc: { dislikes: 1 }, $push: { usersDisliked: request.body.userId } })
+                        .then(() => response.status(200).json({ message: 'Dislike ajouté !' }))
+                        .catch(error => response.status(400).json({ error }));
                 }
             }
             else {
-                if (sauce.usersLiked.includes(req.body.userId)) {
+                if (sauce.usersLiked.includes(request.body.userId)) {
                     sauces
-                        .updateOne({ _id: req.params.id }, 
+                        .updateOne({ _id: request.params.id }, 
                             { $inc: { likes: -1 }, 
-                            $pull: { usersLiked: req.body.userId } })
-                        .then(() => { res.status(200).json({ message: 'Like supprimé !' }) })
-                        .catch(error => res.status(400).json({ error }));
+                            $pull: { usersLiked: request.body.userId } })
+                        .then(() => { response.status(200).json({ message: 'Like supprimé !' }) })
+                        .catch(error => response.status(400).json({ error }));
                 }
-                else if (sauce.usersDisliked.includes(req.body.userId)) {
+                else if (sauce.usersDisliked.includes(request.body.userId)) {
                     sauces
-                        .updateOne({ _id: req.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } })
-                        .then(() => { res.status(200).json({ message: 'Dislike supprimé !' }) })
-                        .catch(error => res.status(400).json({ error }));
+                        .updateOne({ _id: request.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } })
+                        .then(() => { response.status(200).json({ message: 'Dislike supprimé !' }) })
+                        .catch(error => response.status(400).json({ error }));
                 }
             }
         })
 
 
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => response.status(400).json({ error }));
 }
