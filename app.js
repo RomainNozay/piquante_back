@@ -8,8 +8,8 @@ const path = require('path');
 
 const bodyParser = require("body-parser");
 
-const userRoads = require("./routes/userRoads");
-const saucesRoads = require("./routes/saucesRoads")
+const userRoutes = require("./routes/userRoutes");
+const saucesRoutes = require("./routes/saucesRoutes")
 
 const app = express();
 
@@ -26,9 +26,9 @@ app.use((req, res, next) => {
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-app.use('/api/auth', userRoads);
+app.use('/api/auth', userRoutes);
 
-app.use("/api/sauces", saucesRoads);
+app.use("/api/sauces", saucesRoutes);
 
 app.use(helmet());
 

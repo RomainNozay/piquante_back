@@ -23,7 +23,10 @@ exports.createSauce = (req, res, next) => {
   } else {
     const sauce = new sauces({
       ...sauceObject,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      imageUrl: 
+      `${req.protocol}://
+      ${req.get('host')}
+      /images/${req.file.filename}`
     });
     sauce
       .save()
@@ -90,7 +93,7 @@ exports.deleteSauce = (req, res, next) => {
     .findOne({ _id: req.params.id })
     .then(sauce => {
       const filename = sauce.imageUrl.split('/images/')[1];
-      userIdUrl = req.originalUrl.split("=")[1];
+      // userIdUrl = req.originalUrl.split("=")[1];
       fs.unlink(`images/${filename}`, () => {
         sauces
           .deleteOne({ _id: req.params.id })
