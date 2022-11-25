@@ -23,7 +23,7 @@ http://localhost:3000/api/sauces
 5) Route (GET) pour récupérer une sauce grâce à son identifiant :
 http://localhost:3000/api/sauces:id
 
-6 )Route (PUT) pour modifier une sauce selectionnée par son identifiant :
+6) Route (PUT) pour modifier une sauce selectionnée par son identifiant :
 http://localhost:3000/api/sauces:id
 
 7) Route (DELETE) pour supprimer une sauce selectionnée par son identifiant :
