@@ -13,7 +13,6 @@ exports.createSauce = (request, response, next) => {
     !regex.test(sauceObject.mainPepper)
   ) {
     const filename = request.file.filename;
-    console.log(filename);
     fs.unlink(`images/${filename}`, (error) => {
       if (error) throw error;
     })
