@@ -58,7 +58,6 @@ exports.modifyOneSauce = (request, response, next) => {
       })
       .catch(error => response.status(400).json({ error }));
   } else {
-    console.log("false")
   }
 
   const sauceObject = request.file ?
