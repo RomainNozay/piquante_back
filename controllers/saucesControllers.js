@@ -23,8 +23,7 @@ exports.createSauce = (request, response, next) => {
   } else {
     const sauce = new sauces({
       ...sauceObject,
-      imageUrl: 
-      `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
+      imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
     });
     sauce
       .save()
@@ -54,7 +53,6 @@ exports.modifyOneSauce = (request, response, next) => {
       .findOne({ _id: request.params.id })
       .then((saucesModel) => {
         const filename = saucesModel.imageUrl.split("/images")[1];
-        console.log(filename);
         fs.unlink(`images/${filename}`, (error) => {
           if (error) throw error;
         })
@@ -91,7 +89,6 @@ exports.deleteSauce = (request, response, next) => {
     .findOne({ _id: request.params.id })
     .then(sauce => {
       const filename = sauce.imageUrl.split('/images/')[1];
-      // userIdUrl = req.originalUrl.split("=")[1];
       fs.unlink(`images/${filename}`, () => {
         sauces
           .deleteOne({ _id: request.params.id })

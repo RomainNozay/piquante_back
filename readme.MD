@@ -6,7 +6,7 @@ dans env.example.
 
 Puis lancer le server grâce à `nodemon server` ou 'node server'
 
-II)Routes
+II) Routes
 
 1) Route (POST) pour créer un compte :
 http://localhost:3000/api/auth/signup

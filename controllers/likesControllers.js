@@ -11,9 +11,8 @@ exports.giveLike = (request, response, next) => {
                 }
                 else {
                     sauces
-                        .updateOne({ _id: request.params.id }, 
-                            { $inc: { likes: 1 }, 
-                            $push: { usersLiked: request.body.userId } })
+                        .updateOne({ _id: request.params.id },
+                            { $inc: { likes: 1 }, $push: { usersLiked: request.body.userId } })
                         .then(() => response.status(200).json({ message: 'Like ajouté !' }))
                         .catch(error => response.status(400).json({ error }))
                 }
@@ -25,7 +24,7 @@ exports.giveLike = (request, response, next) => {
                 }
                 else {
                     sauces
-                        .updateOne({ _id: request.params.id }, 
+                        .updateOne({ _id: request.params.id },
                             { $inc: { dislikes: 1 }, $push: { usersDisliked: request.body.userId } })
                         .then(() => response.status(200).json({ message: 'Dislike ajouté !' }))
                         .catch(error => response.status(400).json({ error }));
@@ -34,15 +33,15 @@ exports.giveLike = (request, response, next) => {
             else {
                 if (sauce.usersLiked.includes(request.body.userId)) {
                     sauces
-                        .updateOne({ _id: request.params.id }, 
-                            { $inc: { likes: -1 }, 
-                            $pull: { usersLiked: request.body.userId } })
+                        .updateOne({ _id: request.params.id },
+                            { $inc: { likes: -1 }, $pull: { usersLiked: request.body.userId } })
                         .then(() => { response.status(200).json({ message: 'Like supprimé !' }) })
                         .catch(error => response.status(400).json({ error }));
                 }
                 else if (sauce.usersDisliked.includes(request.body.userId)) {
                     sauces
-                        .updateOne({ _id: request.params.id }, { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId } })
+                        .updateOne({ _id: request.params.id },
+                            { $inc: { dislikes: -1 }, $pull: { usersDisliked: request.body.userId } })
                         .then(() => { response.status(200).json({ message: 'Dislike supprimé !' }) })
                         .catch(error => response.status(400).json({ error }));
                 }

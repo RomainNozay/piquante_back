@@ -11,10 +11,11 @@ passwordSchema
     .is().not().oneOf(['Passw0rd', 'Password123']);
 
 module.exports = (request, response, next) => {
-    if (passwordSchema.validate(req.body.password)) {
+    if (passwordSchema.validate(request.body.password)) {
         next()
     } else {
-        return response.status(400).send({ error: `Le mot de passe n'est pas assez fort :
-        "+ ${passwordSchema.validate('request.body.password', { list: true })}` })
+        return response.status(400).send({
+            error: `Le mot de passe n'est pas assez fort :"+ ${passwordSchema.validate('request.body.password', { list: true })}`
+        })
     }
 }
