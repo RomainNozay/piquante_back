@@ -4,10 +4,13 @@ Bonjour,
 
 Cette Api à été réaliser grâce à Node.js.
 
-Renseigner vos variables d'environnement dans un fichier .env en partant du modèle fournit
-dans env.example.
+Pour lancer cette api 
 
-Puis lancer le server grâce à `nodemon server` ou 'node server'
+1) Renseignez vos variables d'environnement dans le fichier .env.example puis retiré le '.example' et enregistrez.
+
+2) Dans un terminal tapez 'npm install'
+
+3) Puis toujours dans ce terminal tapez 'nodemon server' ou 'node server'.
 
 II) Routes
 
