@@ -2,7 +2,6 @@ const sauces = require("../models/saucesModel");
 const fs = require("fs");
 const saucesModel = require("../models/saucesModel");
 const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
 
 const regex = /^[^@&"()!_$*€£`+=\/;?#&<>]+$/;
 
@@ -67,8 +66,7 @@ exports.modifyOneSauce = (request, response, next) => {
     {
       ...JSON.parse(request.body.sauce),
       imageUrl: `${request.protocol}://${request.get('host')}/images/${request.file.filename}`
-    }
-    : { ...request.body };
+    } : { ...request.body };
   if (
     !regex.test(sauceObject.name) ||
     !regex.test(sauceObject.manufacturer) ||
@@ -79,28 +77,22 @@ exports.modifyOneSauce = (request, response, next) => {
       .status(500)
       .json({ error: "Des champs contiennent des caractères invalides" });
   }
-  sauces.findOne({ _id: request.params.id })
-  .then((saucesModel) => {
-    const token = request.headers.authorization.split(' ')[1]
-    const decodedToken = jwt.verify(token, `${process.env.RND_TKN}`)
-    const userId = decodedToken.userId
-    console.log("sauce.userId")
-    console.log(saucesModel.userId)
-    console.log("userId")
-    console.log(userId)
-    if (userId === saucesModel.userId) {
-      sauces
-      .updateOne({ _id: request.params.id }, { ...sauceObject, _id: request.params.id })
-      .then(() => response.status(200).json({ message: 'Objet modifié !' }))
-      .catch(error => response.status(400).json({ error }));
-    }  else {
-      response.status(403).json({error: 'Requête non authorisée'});
+  sauces
+    .findOne({ _id: request.params.id })
+    .then((saucesModel) => {
+      const token = request.headers.authorization.split(' ')[1]
+      const decodedToken = jwt.verify(token, `${process.env.RND_TKN}`)
+      const userId = decodedToken.userId
+      if (userId === saucesModel.userId) {
+        sauces
+          .updateOne({ _id: request.params.id }, { ...sauceObject, _id: request.params.id })
+          .then(() => response.status(200).json({ message: 'Objet modifié !' }))
+          .catch(error => response.status(400).json({ error }));
+      } else {
+        response.status(403).json({ error: 'Requête non authorisée' });
       }
-})
+    })
 };
-
-
-
 
 exports.deleteSauce = (request, response, next) => {
   sauces
@@ -117,9 +109,8 @@ exports.deleteSauce = (request, response, next) => {
             .then(() => response.status(200).json({ message: 'Objet supprimé !' }))
             .catch(error => response.status(400).json({ error }));
         });
-      }
-      else {
-        response.status(403).json({error: 'Requête non authorisée'});
+      } else {
+        response.status(403).json({ error: 'Requête non authorisée' });
       }
     })
     .catch(error => response.status(500).json({ error }));
