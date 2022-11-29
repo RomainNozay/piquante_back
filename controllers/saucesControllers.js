@@ -79,24 +79,37 @@ exports.modifyOneSauce = (request, response, next) => {
       .status(500)
       .json({ error: "Des champs contiennent des caractères invalides" });
   }
-  sauces
-    .updateOne({ _id: request.params.id }, { ...sauceObject, _id: request.params.id })
-    .then(() => response.status(200).json({ message: 'Objet modifié !' }))
-    .catch(error => response.status(400).json({ error }));
+  sauces.findOne({ _id: request.params.id })
+  .then((saucesModel) => {
+    const token = request.headers.authorization.split(' ')[1]
+    const decodedToken = jwt.verify(token, `${process.env.RND_TKN}`)
+    const userId = decodedToken.userId
+    console.log("sauce.userId")
+    console.log(saucesModel.userId)
+    console.log("userId")
+    console.log(userId)
+    if (userId === saucesModel.userId) {
+      sauces
+      .updateOne({ _id: request.params.id }, { ...sauceObject, _id: request.params.id })
+      .then(() => response.status(200).json({ message: 'Objet modifié !' }))
+      .catch(error => response.status(400).json({ error }));
+    }  else {
+      response.status(403).json({error: 'Requête non authorisée'});
+      }
+})
 };
+
+
+
 
 exports.deleteSauce = (request, response, next) => {
   sauces
     .findOne({ _id: request.params.id })
     .then(sauce => {
-      console.log("sauce.userId")
-      console.log(sauce.userId)
       const token = request.headers.authorization.split(' ')[1]
       const decodedToken = jwt.verify(token, `${process.env.RND_TKN}`)
       const userId = decodedToken.userId
       if (userId === sauce.userId) {
-        console.log("userId")
-        console.log(userId)
         const filename = sauce.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
           sauces
@@ -105,8 +118,9 @@ exports.deleteSauce = (request, response, next) => {
             .catch(error => response.status(400).json({ error }));
         });
       }
-      else { }
+      else {
+        response.status(403).json({error: 'Requête non authorisée'});
+      }
     })
-
     .catch(error => response.status(500).json({ error }));
 }
