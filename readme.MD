@@ -6,11 +6,9 @@ Cette Api à été réaliser grâce à Node.js.
 
 Pour lancer cette api 
 
-1) Renseignez vos variables d'environnement dans le fichier .env.example puis retiré le '.example' et enregistrez.
+1) Dans un terminal tapez 'npm install'
 
-2) Dans un terminal tapez 'npm install'
-
-3) Puis toujours dans ce terminal tapez 'nodemon server' ou 'node server'.
+2) Puis toujours dans ce terminal tapez 'nodemon server' ou 'node server'.
 
 II) Routes
 

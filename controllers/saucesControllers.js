@@ -1,5 +1,8 @@
 const sauces = require("../models/saucesModel");
 const fs = require("fs");
+const saucesModel = require("../models/saucesModel");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 
 const regex = /^[^@&"()!_$*€£`+=\/;?#&<>]+$/;
 
@@ -86,13 +89,24 @@ exports.deleteSauce = (request, response, next) => {
   sauces
     .findOne({ _id: request.params.id })
     .then(sauce => {
-      const filename = sauce.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        sauces
-          .deleteOne({ _id: request.params.id })
-          .then(() => response.status(200).json({ message: 'Objet supprimé !' }))
-          .catch(error => response.status(400).json({ error }));
-      });
+      console.log("sauce.userId")
+      console.log(sauce.userId)
+      const token = request.headers.authorization.split(' ')[1]
+      const decodedToken = jwt.verify(token, `${process.env.RND_TKN}`)
+      const userId = decodedToken.userId
+      if (userId === sauce.userId) {
+        console.log("userId")
+        console.log(userId)
+        const filename = sauce.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, () => {
+          sauces
+            .deleteOne({ _id: request.params.id })
+            .then(() => response.status(200).json({ message: 'Objet supprimé !' }))
+            .catch(error => response.status(400).json({ error }));
+        });
+      }
+      else { }
     })
+
     .catch(error => response.status(500).json({ error }));
 }
